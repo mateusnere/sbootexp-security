@@ -12,13 +12,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, SenhaMasterAuthenticationProvider provider) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity httpSecurity,
+            SenhaMasterAuthenticationProvider senhaMasterAuthenticationProvider,
+            CustomFilter customFilter) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests(customizer -> {
                     customizer.requestMatchers("/public").permitAll();
@@ -26,7 +30,8 @@ public class SecurityConfig {
                     customizer.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults())
-                .authenticationProvider(provider)
+                .authenticationProvider(senhaMasterAuthenticationProvider)
+                .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
