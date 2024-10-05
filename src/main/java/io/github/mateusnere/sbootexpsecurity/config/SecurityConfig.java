@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, SenhaMasterAuthenticationProvider provider) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests(customizer -> {
                     customizer.requestMatchers("/public").permitAll();
@@ -26,6 +26,7 @@ public class SecurityConfig {
                     customizer.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults())
+                .authenticationProvider(provider)
                 .build();
     }
 
