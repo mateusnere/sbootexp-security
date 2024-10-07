@@ -3,6 +3,7 @@ package io.github.mateusnere.sbootexpsecurity.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     @Bean
@@ -27,7 +29,6 @@ public class SecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(customizer -> {
                     customizer.requestMatchers("/public").permitAll();
-                    customizer.requestMatchers("/admin").hasRole("ADMIN");
                     customizer.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults())
@@ -36,23 +37,23 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-
-        UserDetails commomUser = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("123"))
-                .roles("USER")
-                .build();
-
-        UserDetails adminUser = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(commomUser, adminUser);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//
+//        UserDetails commomUser = User.builder()
+//                .username("user")
+//                .password(passwordEncoder().encode("123"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails adminUser = User.builder()
+//                .username("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(commomUser, adminUser);
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
