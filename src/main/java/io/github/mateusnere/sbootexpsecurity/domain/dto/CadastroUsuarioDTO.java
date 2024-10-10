@@ -9,5 +9,5 @@ import java.util.List;
 public class CadastroUsuarioDTO {
 
     private Usuario usuario;
-    private List<String> grupos;
+    private List<String> roles;
 }

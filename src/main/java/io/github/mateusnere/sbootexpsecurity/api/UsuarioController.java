@@ -21,7 +21,7 @@ public class UsuarioController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Usuario> salvar(@RequestBody CadastroUsuarioDTO cadastroUsuarioDTO) {
-        Usuario usuarioSalvo = usuarioService.salvar(cadastroUsuarioDTO.getUsuario(), cadastroUsuarioDTO.getGrupos());
+        Usuario usuarioSalvo = usuarioService.salvar(cadastroUsuarioDTO.getUsuario(), cadastroUsuarioDTO.getRoles());
         return ResponseEntity.ok(usuarioSalvo);
     }
 }

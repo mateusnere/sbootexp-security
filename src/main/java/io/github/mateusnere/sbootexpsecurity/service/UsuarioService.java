@@ -25,10 +25,10 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Usuario salvar(Usuario usuario, List<String> grupos) {
+    public Usuario salvar(Usuario usuario, List<String> roles) {
 
-        List<UsuarioGrupo> usuarioGrupoList = grupos.stream().map(nomeGrupo -> {
-                    Optional<Grupo> possivelGrupo = grupoRepository.findByNome(nomeGrupo);
+        List<UsuarioGrupo> usuarioGrupoList = roles.stream().map(nomeRole -> {
+                    Optional<Grupo> possivelGrupo = grupoRepository.findByNome(nomeRole);
                     if (possivelGrupo.isPresent()) {
                         Grupo grupo = possivelGrupo.get();
                         return new UsuarioGrupo(usuario, grupo);
@@ -44,6 +44,19 @@ public class UsuarioService {
             usuarioGrupoRepository.saveAll(usuarioGrupoList);
         }
 
+        return usuario;
+    }
+
+    public Usuario getUsuarioComPermissoes(String login) {
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByLogin(login);
+        if(usuarioOptional.isEmpty()) {
+            return null;
+        }
+
+        Usuario usuario = usuarioOptional.get();
+        List<String> rolesByUsuario = usuarioGrupoRepository.findRolesByUsuario(usuario);
+        usuario.setRoles(rolesByUsuario);
         return usuario;
     }
 
