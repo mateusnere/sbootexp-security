@@ -1,5 +1,7 @@
 package io.github.mateusnere.sbootexpsecurity.config;
 
+import io.github.mateusnere.sbootexpsecurity.domain.security.CustomAuthentication;
+import io.github.mateusnere.sbootexpsecurity.domain.security.IdentificacaoUsuario;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,11 +24,20 @@ public class SenhaMasterAuthenticationProvider implements AuthenticationProvider
         var passMaster = "@321";
 
         if(userMaster.equals(user) && passMaster.equals(password)) {
-            return new UsernamePasswordAuthenticationToken(
+
+            var identificacaoUsuario = new IdentificacaoUsuario(
+                    "user-master-id",
+                    "master",
                     "Usuário Mestre",
-                    null,
-                    List.of(new SimpleGrantedAuthority("ADMIN"))
-            );
+                    List.of("ADMIN"));
+
+            return new CustomAuthentication(identificacaoUsuario);
+
+//            return new UsernamePasswordAuthenticationToken(
+//                    "Usuário Mestre",
+//                    null,
+//                    List.of(new SimpleGrantedAuthority("ADMIN"))
+//            );
         }
 
         return null;
